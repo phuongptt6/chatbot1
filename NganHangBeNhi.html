@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngân hàng của bé Nhi</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .app-container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .header h1 {
+            color: #ff6b81;
+            font-size: 26px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .illustration img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid #ff9ff3;
+            box-shadow: 0 8px 15px rgba(255,107,129,0.2);
+            margin-bottom: 5px;
+        }
+        .score-board {
+            background-color: #fff0f3;
+            border: 3px dashed #ff9ff3;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .score-board p {
+            color: #747d8c;
+            font-size: 18px;
+            margin: 0 0 5px 0;
+            font-weight: bold;
+        }
+        #total-score {
+            font-size: 55px;
+            color: #ff4757;
+            font-weight: 900;
+            margin: 0;
+            transition: transform 0.2s ease-in-out;
+        }
+        .star {
+            color: #ffa502;
+            font-size: 20px;
+            margin-top: 5px;
+        }
+        
+        /* Box nhập liệu mới */
+        .input-section {
+            background-color: #f1f2f6;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-section label {
+            display: block;
+            color: #2f3542;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dfe4ea;
+            border-radius: 10px;
+            font-size: 15px;
+            margin-bottom: 10px;
+            outline: none;
+            background-color: white;
+            transition: border-color 0.2s;
+        }
+        select:focus, input:focus {
+            border-color: #ff6b81;
+        }
+        
+        .flex-row {
+            display: flex;
+            gap: 10px;
+        }
+        .flex-row input[type="text"] {
+            flex: 2;
+        }
+        .flex-row input[type="number"] {
+            flex: 1;
+        }
+
+        .btn-action {
+            width: 100%;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 0px rgba(0,0,0,0.1);
+            transition: all 0.1s;
+        }
+        .btn-action:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+        }
+        .bg-primary { background-color: #70a1ff; box-shadow: 0 4px 0px #537fe6; }
+        .bg-success { background-color: #2ed573; box-shadow: 0 4px 0px #22a659; }
+
+        .divider {
+            text-align: center;
+            color: #a4b0be;
+            margin: 10px 0;
+            font-size: 14px;
+            position: relative;
+        }
+        .divider::before, .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background-color: #dfe4ea;
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        .reset-btn {
+            margin-top: 15px;
+            background: transparent;
+            border: none;
+            color: #a4b0be;
+            text-decoration: underline;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #message {
+            color: #2ed573;
+            font-size: 14px;
+            font-weight: bold;
+            height: 20px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1>Ngân hàng của bé</h1>
+        <div class="illustration">
+            <img src="https://raw.githubusercontent.com/phuongptt6/chatbot1/fd29dc09235f53dc17b62a29c85e585ad062edf0/Gemini_Generated_Image_nc4450nc4450nc44.png" alt="Ảnh chibi bé Nhi">
+        </div>
+    </div>
+
+    <div class="score-board">
+        <p>Tổng điểm hiện tại</p>
+        <div id="total-score">0</div>
+        <div class="star">⭐⭐⭐</div>
+        <div id="message"></div>
+    </div>
+
+    <div class="input-section">
+        <label>✨ Chọn việc bé đã làm:</label>
+        <select id="preset-tasks">
+            </select>
+        <button class="btn-action bg-primary" onclick="addPresetTask()">Cộng điểm việc này</button>
+    </div>
+
+    <div class="divider">HOẶC</div>
+
+    <div class="input-section">
+        <label>✍️ Ba mẹ tự nhập việc khác:</label>
+        <div class="flex-row">
+            <input type="text" id="custom-name" placeholder="Tên việc (Vd: Quét nhà)">
+            <input type="number" id="custom-points" placeholder="Điểm" min="1">
+        </div>
+        <button class="btn-action bg-success" onclick="addCustomTask()">Cộng điểm tùy chọn</button>
+    </div>
+
+    <button class="reset-btn" onclick="resetPoints()">Ba mẹ bấm vào đây để làm lại từ đầu</button>
+</div>
+
+<script>
+    // Danh sách 15 công việc
+    const tasks = [
+        { name: "Tự dọn dẹp đồ chơi sau khi chơi", points: 5 },
+        { name: "Gấp quần áo cá nhân", points: 5 },
+        { name: "Tự đánh răng và rửa mặt", points: 3 },
+        { name: "Mang bát đĩa để vào bồn rửa", points: 5 },
+        { name: "Tự chuẩn bị sách vở và quần áo", points: 5 },
+        { name: "Hoàn thành bài tập về nhà", points: 10 },
+        { name: "Đọc 1 cuốn truyện / 10 trang sách", points: 10 },
+        { name: "Học tiếng Anh (15 phút)", points: 10 },
+        { name: "Thức dậy đúng giờ", points: 5 },
+        { name: "Đi ngủ đúng giờ quy định", points: 5 },
+        { name: "Giúp mẹ tưới cây / lau bàn", points: 5 },
+        { name: "Tự mặc quần áo và mang giày", points: 3 },
+        { name: "Vứt rác đúng nơi quy định", points: 2 },
+        { name: "Giữ gìn góc học tập gọn gàng", points: 5 },
+        { name: "Có thái độ lễ phép / giúp đỡ", points: 10 }
+    ];
+
+    // Tải danh sách công việc vào hộp chọn (Select)
+    const selectElement = document.getElementById('preset-tasks');
+    tasks.forEach((task, index) => {
+        let option = document.createElement('option');
+        option.value = task.points;
+        option.text = `${task.name} (+${task.points} điểm)`;
+        selectElement.appendChild(option);
+    });
+
+    // Khởi tạo điểm từ localStorage
+    let currentScore = localStorage.getItem('diemBeNhi');
+    if (currentScore === null) {
+        currentScore = 0;
+    } else {
+        currentScore = parseInt(currentScore);
+    }
+    const scoreElement = document.getElementById('total-score');
+    const messageElement = document.getElementById('message');
+    scoreElement.innerText = currentScore;
+
+    // Hàm xử lý cộng điểm chung
+    function updateScore(points, taskName) {
+        currentScore += points;
+        localStorage.setItem('diemBeNhi', currentScore);
+        scoreElement.innerText = currentScore;
+
+        // Hiệu ứng nảy
+        scoreElement.style.transform = 'scale(1.4)';
+        setTimeout(() => {
+            scoreElement.style.transform = 'scale(1)';
+        }, 200);
+
+        // Hiện thông báo nhỏ
+        messageElement.innerText = `+${points} điểm: ${taskName}! 🎉`;
+        setTimeout(() => {
+            messageElement.innerText = "";
+        }, 3000);
+    }
+
+    // Nút cộng điểm việc có sẵn
+    function addPresetTask() {
+        const points = parseInt(selectElement.value);
+        const taskName = selectElement.options[selectElement.selectedIndex].text.split(' (+')[0];
+        updateScore(points, taskName);
+    }
+
+    // Nút cộng điểm việc tùy chọn
+    function addCustomTask() {
+        const nameInput = document.getElementById('custom-name').value;
+        const pointsInput = parseInt(document.getElementById('custom-points').value);
+
+        if (nameInput.trim() === "" || isNaN(pointsInput) || pointsInput <= 0) {
+            alert("Ba mẹ vui lòng nhập Tên việc và Số điểm hợp lệ nhé!");
+            return;
+        }
+
+        updateScore(pointsInput, nameInput);
+        
+        // Xóa ô nhập sau khi cộng xong
+        document.getElementById('custom-name').value = "";
+        document.getElementById('custom-points').value = "";
+    }
+
+    // Reset điểm
+    function resetPoints() {
+        if(confirm("Ba mẹ có chắc chắn muốn xóa hết điểm để bé tích lại từ đầu không?")) {
+            currentScore = 0;
+            localStorage.setItem('diemBeNhi', currentScore);
+            scoreElement.innerText = currentScore;
+            messageElement.innerText = "";
+        }
+    }
+</script>
+
+</body>
+</html>
